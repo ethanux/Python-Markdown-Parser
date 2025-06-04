@@ -36,8 +36,9 @@ The following rules govern how Markdown elements are tokenized:
 
 - `#`, `##`, ... `######` → Header tokens (levels 1 to 6)
 - `-` at the beginning of a line → List item token
-- `**text**` or `__text__` → Bold token
-- `*text*` or `_text_` → Italic token
+- `1.` at the beginning of a line → List item token
+- `*text*` → Bold token
+-  `_text_` → Italic token
 - `` `code` `` → Inline code token
 - Default → Plain text token
 
