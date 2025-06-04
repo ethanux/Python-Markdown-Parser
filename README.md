@@ -15,6 +15,7 @@ The system reads a Markdown file line by line and passes each line through a ser
 1. **Line-based Tokenization**:
    - Detects headers (lines starting with `#`)
    - Detects unordered list items (lines starting with `-`)
+   - Detects unordered list items (lines starting with `1.` ) numbering is autometically handled
    - Defaults to plain text if no special formatting is found
 
 2. **Inline Tokenization**:
