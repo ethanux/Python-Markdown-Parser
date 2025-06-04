@@ -8,6 +8,7 @@ class HeaderTokenizer:
 		if match:
 			level = len(match.group(1))
 			text = match.group(2).strip()
-			return (DataToken(type=TokenType.HEADER, value=text,meta={'level':level}))
+			if text:
+				return (DataToken(type=TokenType.HEADER, value=text,meta={'level':level}))
 		return None
 

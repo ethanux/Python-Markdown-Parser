@@ -1,5 +1,5 @@
 # hello
-## this is my seconds __hedding__
+## this is my seconds _hedding_ this is bold **name**
 - first list item 
 - second list item
 1. orderd list item

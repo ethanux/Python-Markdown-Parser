@@ -5,7 +5,7 @@ from .inline_tokenizer import InlineTokenizer
 import re
 
 class MakeToken:
-	tokens = []
+	
 	header_tokenizer = HeaderTokenizer()
 	list_tokenizer = ListTokenizer()
 	text_tokenizer = TextTokenizer()
@@ -13,42 +13,33 @@ class MakeToken:
 
 	def __init__(self, lines:list):
 		self.lines = lines
+		self.tokens = []
 
+	def process_token(self,token):
+		inline_tokens = self.inline_tokenizer.tokenize(token.value)
+		if inline_tokens:
+			self.tokens.append((token,inline_tokens))
+		else:
+			self.tokens.append(token)
 
 	def get_tokens(self):
 		for line in self.lines :
 			if line.startswith("#"):
-				token = self.header_tokenizer.tokenize(line)
+				token = self.header_tokenizer.tokenize(line.strip())
 				if token:
-					print(token.value)
-					inline_tokens = self.inline_tokenizer.tokenize(token.value)
-					if inline_tokens:
-						self.tokens.append((token,inline_tokens))
-					else:
-						self.tokens.append(token)
+					self.process_token(token)
+					
 			elif line.startswith("-"):
-				token = self.list_tokenizer.tokenize(line)
+				token = self.list_tokenizer.tokenize(line.strip())
 				if token:
-					inline_tokens = self.inline_tokenizer.tokenize(token.value)
-					if inline_tokens:
-						self.tokens.append((token,inline_tokens))
-					else:
-						self.tokens.append(token)
+					self.process_token(token)
 				
 			elif re.match(r'^(\d+\.)\s+(.*)',line):
-				token = self.list_tokenizer.tokenize(line)
+				token = self.list_tokenizer.tokenize(line.strip())
 				if token:
-					inline_tokens = self.inline_tokenizer.tokenize(token.value)
-					if inline_tokens:
-						self.tokens.append((token,inline_tokens))
-					else:
-						self.tokens.append(token)
+					self.process_token(token)
 			else:
-				token = self.text_tokenizer.tokenize(line)
-				inline_tokens = self.inline_tokenizer.tokenize(token.value)
-				if inline_tokens:
-					self.tokens.append((token,inline_tokens))
-				else:
-					self.tokens.append(token)
+				token = self.text_tokenizer.tokenize(line.strip())
+				self.process_token(token)
 
 		return self.tokens if self.tokens else None
