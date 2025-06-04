@@ -99,6 +99,36 @@ The output will be a structured token list identifying the header, inline styles
 
 ---
 
+
+
+## inline markdown parser rules 
+
+| Markdown     | Token Type | InlineType |
+| ------------ | ---------- | ---------- |
+| `*italic*`   | Inline     | `ITALIC`   |
+| `_italic_`   | Inline     | `ITALIC`   |
+| `**bold**`   | Inline     | `BOLD`     |
+| `__bold__`   | Inline     | `BOLD`     |
+| Regular text | Inline     | `TEXT`     |
+
+
+📦 Full Working Flow Recap
+
+# For each line:
+- Check if it’s a header (`#`)
+- Check if it's an unordered list (`-`)
+- Check if it's an ordered list (`1.`, `2.`, etc.)
+- Else: treat as normal text
+
+# For all:
+- Tokenize block-level
+- Then tokenize inline
+- Append either: 
+    (block_token, [inline_tokens]) or block_token (if no inline)
+
+
+---
+
 ## License
 
 This project is open-source and available under the MIT License.
