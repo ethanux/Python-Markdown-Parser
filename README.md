@@ -95,7 +95,7 @@ This is **bold** and *italic*.
 - List item 1
 ```
 
-The output will be a structured token list identifying the header, inline styles, and list item accordingly.
+The output will be html content saved in an html file stored in this path markdown/html/markdown.html
 
 ---
 
@@ -109,6 +109,7 @@ The output will be a structured token list identifying the header, inline styles
 | `_italic_`   | Inline     | `ITALIC`   |
 | `**bold**`   | Inline     | `BOLD`     |
 | `__bold__`   | Inline     | `BOLD`     |
+| ``code``     | Inline     | `CODE`     |
 | Regular text | Inline     | `TEXT`     |
 
 
