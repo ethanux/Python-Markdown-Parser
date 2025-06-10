@@ -23,6 +23,7 @@ The system reads a Markdown file line by line and passes each line through a ser
      - `**bold**`
      - `*italic*`
      - `` `inline code` ``
+     - `` ```block code``` ``
 
 3. **Token Representation**:
    - Each token has a type and value
@@ -37,9 +38,12 @@ The following rules govern how Markdown elements are tokenized:
 - `#`, `##`, ... `######` → Header tokens (levels 1 to 6)
 - `-` at the beginning of a line → List item token
 - `1.` at the beginning of a line → List item token
-- `*text*` → Bold token
+- `**text**` → Bold token
+- `__text__` → Bold token
 -  `_text_` → Italic token
+-  `*text*` → Italic token
 - `` `code` `` → Inline code token
+- `` ```code``` `` → Block code token
 - Default → Plain text token
 
 ---
