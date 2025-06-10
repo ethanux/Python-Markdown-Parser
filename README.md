@@ -15,7 +15,8 @@ The system reads a Markdown file line by line and passes each line through a ser
 1. **Line-based Tokenization**:
    - Detects headers (lines starting with `#`)
    - Detects unordered list items (lines starting with `-`)
-   - Detects unordered list items (lines starting with `1.` ) numbering is autometically handled
+   - Detects ordered list items (lines starting with `1.` ) numbering is autometically handled
+   - Detects code block (line starting with ` ``` `, and ending with ` ``` `)
    - Defaults to plain text if no special formatting is found
 
 2. **Inline Tokenization**:
@@ -25,7 +26,6 @@ The system reads a Markdown file line by line and passes each line through a ser
      - `*italic*`
      - `_italic_`
      - `` `inline code` ``
-     - `` ```block code``` ``
 
 3. **Token Representation**:
    - Each token has a type and value
@@ -38,8 +38,8 @@ The system reads a Markdown file line by line and passes each line through a ser
 The following rules govern how Markdown elements are tokenized:
 
 - `#`, `##`, ... `######` → Header tokens (levels 1 to 6)
-- `-` at the beginning of a line → List item token
-- `1.` at the beginning of a line → List item token
+- `-` at the beginning of a line → List item token (unordered)
+- `1.` at the beginning of a line → List item token (ordered)
 - `**text**` → Bold token
 - `__text__` → Bold token
 -  `_text_` → Italic token
@@ -125,6 +125,7 @@ The output will be html content saved in an html file stored in this path markdo
 - Check if it’s a header (`#`)
 - Check if it's an unordered list (`-`)
 - Check if it's an ordered list (`1.`, `2.`, etc.)
+- Check if it's a code block  (` ``` `)
 - Else: treat as normal text
 
 # For all:
