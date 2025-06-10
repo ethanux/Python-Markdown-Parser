@@ -21,7 +21,9 @@ The system reads a Markdown file line by line and passes each line through a ser
 2. **Inline Tokenization**:
    - Extracts inline formatting inside the lines:
      - `**bold**`
+     - `__bold__`
      - `*italic*`
+     - `_italic_`
      - `` `inline code` ``
      - `` ```block code``` ``
 
