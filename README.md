@@ -115,7 +115,7 @@ The output will be html content saved in an html file stored in this path markdo
 | `_italic_`   | Inline     | `ITALIC`   |
 | `**bold**`   | Inline     | `BOLD`     |
 | `__bold__`   | Inline     | `BOLD`     |
-| ` `code` `   | Inline     | `CODE`     |
+| `` `code` `` | Inline     | `CODE`     |
 | Regular text | Inline     | `TEXT`     |
 
 
