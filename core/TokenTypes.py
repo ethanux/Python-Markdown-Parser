@@ -6,10 +6,11 @@ class TokenType(Enum):
 	ITALIC 		= "ITALIC"
 	LIST_ITEM 	= "LIST_ITEM"
 	TEXT 		= "TEXT"
-	INLINE_CODE = "INLINE_CODE"
+	BLOCK_CODE = "BLOCK_CODE"
 	
 
 class InlineType(Enum):
     TEXT = 'TEXT'
     ITALIC = 'ITALIC'
     BOLD = 'BOLD'
+    CODE = 'CODE'

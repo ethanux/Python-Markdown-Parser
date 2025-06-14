@@ -3,6 +3,7 @@ from tokenizer.make_token import MakeToken
 from parsers.header_parser import HeaderParser
 from parsers.list_parser import ListParser
 from parsers.text_parser import TextParser
+from parsers.code_parser import CodeParser
 from core.TokenTypes import TokenType 
 
 
@@ -22,9 +23,10 @@ class DriverParser:
 		self.html_content = []
 
 	def html_parser(self):
-		for token in self.tokens:
-			
-			
+		for token in self.tokens:	
+			print("==="*50)
+			print(token)
+			print("=="*50)
 			if token[0].type == TokenType.HEADER:   # header aprser 
 				parser = HeaderParser(token)
 				html = parser.html_parser()
@@ -54,8 +56,13 @@ class DriverParser:
 					self.html_content.append(html)
 					self.grouped_list = []
 
-			elif token[0].type == TokenType.TEXT:
+			elif token[0].type == TokenType.BLOCK_CODE:
 				parser = TextParser(token)
+				html = parser.html_parser()
+				self.html_content.append(html)
+
+			elif token[0].type == TokenType.TEXT:
+				parser = CodeParser(token)
 				html = parser.html_parser()
 				self.html_content.append(html)
 			else:

@@ -1,6 +1,7 @@
 
 from tokenizer.make_token import MakeToken
 from parsers.driver_parser import DriverParser
+from config.theme import Theme
 
 
 lines = []
@@ -19,9 +20,14 @@ driver = DriverParser(tokens)
 
 content = "\n".join(driver.html_parser())
 
+theme = Theme()
+
 html = f"""
 	<html>
-	<title>Markdown parser</title>
+	<head>
+  <title>Markdown parser</title>
+  	{theme.get_theme()}
+</head>
 	<body>
 		{content   }
 	</body>

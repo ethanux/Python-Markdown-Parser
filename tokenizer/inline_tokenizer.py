@@ -5,7 +5,7 @@ import re
 
 class InlineTokenizer:
     def tokenize(self, text: str):
-        pattern = r'(\*\*(.*?)\*\*|__(.*?)__|\*(.*?)\*|_(.*?)_)'
+        pattern = r'(\*\*(.*?)\*\*|__(.*?)__|\*(.*?)\*|_(.*?)_|`([^`\s]+)`|`` (.*?) ``)'
         tokens = []
         pos = 0
 
@@ -21,6 +21,10 @@ class InlineTokenizer:
                 tokens.append(InlineToken(InlineType.BOLD, match.group(2) or match.group(3)))
             elif match.group(4) or match.group(5):  # *italic* or _italic_
                 tokens.append(InlineToken(InlineType.ITALIC, match.group(4) or match.group(5)))
+            elif match.group(6):  # `inline code`
+                tokens.append(InlineToken(InlineType.CODE, match.group(6)))
+            elif match.group(7):  # `` inline code with spaces ``
+                tokens.append(InlineToken(InlineType.CODE, match.group(7)))
 
             pos = end
 

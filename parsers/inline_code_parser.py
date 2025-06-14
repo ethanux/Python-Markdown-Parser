@@ -19,5 +19,9 @@ class InlineParser:
 			elif token.type == InlineType.ITALIC :
 				italic = f'<i>{token.value}</i>'
 				self.parsed_token.append(italic)
+
+			elif token.type == InlineType.CODE :
+				code = f'<code>{token.value}</code>'
+				self.parsed_token.append(code)
 		
 		return "".join(self.parsed_token)
