@@ -57,12 +57,12 @@ class DriverParser:
 					self.grouped_list = []
 
 			elif token[0].type == TokenType.BLOCK_CODE:
-				parser = TextParser(token)
+				parser = CodeParser(token)
 				html = parser.html_parser()
 				self.html_content.append(html)
 
 			elif token[0].type == TokenType.TEXT:
-				parser = CodeParser(token)
+				parser = TextParser(token)
 				html = parser.html_parser()
 				self.html_content.append(html)
 			else:

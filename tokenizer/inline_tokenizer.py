@@ -5,7 +5,7 @@ import re
 
 class InlineTokenizer:
     def tokenize(self, text: str):
-        pattern = r'(\*\*(.*?)\*\*|__(.*?)__|\*(.*?)\*|_(.*?)_|`([^`\s]+)`|`` (.*?) ``)'
+        pattern = r'(\*\*(.*?)\*\*|__(.*?)__|\*(.*?)\*|_(.*?)_|`([^`]+)`|`` (.*?) ``)'
         tokens = []
         pos = 0
 
