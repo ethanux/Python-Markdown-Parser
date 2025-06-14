@@ -9,7 +9,7 @@ from tokenizer.make_token import MakeToken
 from parsers.driver_parser import DriverParser
 from config.theme import Theme
 
-# --- Markdown to HTML Function ---
+
 def parse_markdown_to_html(markdown_lines):
     if markdown_lines:
         tokenizer = MakeToken(markdown_lines)
@@ -35,7 +35,7 @@ def parse_markdown_to_html(markdown_lines):
         return html
     return "<h1>No Markdown parsed</h1>"
 
-# --- Demo Markdown ---
+
 demo_markdown = """# Heading 1
 ## Heading 2
 
@@ -67,7 +67,7 @@ class MarkdownApp:
         with open(self.html_file_path, "w", encoding="utf-8") as f:
             f.write(html_output)
 
-        # Refresh browser if already started
+       
         if self.window:
             self.window.load_html(html_output)
 
