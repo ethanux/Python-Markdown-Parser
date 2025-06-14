@@ -7,6 +7,9 @@ This project is a lightweight Markdown tokenizer and parser built in Python. Its
 This modular design allows for easy extension and serves as an educational tool for understanding how parsing and lexical analysis work behind the scenes in compilers and interpreters.
 
 ---
+## Image Preview
+![Capture](https://github.com/user-attachments/assets/3462c49a-a3f7-4bb1-82f6-e6625964ecac)
+
 
 ## How It Works
 
@@ -19,15 +22,62 @@ The system reads a Markdown file line by line and passes each line through a ser
    - Detects code block (line starting with ` ``` `, and ending with ` ``` `)
    - Defaults to plain text if no special formatting is found
 
-2. **Inline Tokenization**:
-   - Extracts inline formatting inside the lines:
-     - `**bold**`
-     - `__bold__`
-     - `*italic*`
-     - `_italic_`
-     - `` `inline code` ``
+   **Block-Level Token Types**
+   
+      | Block Type         | Syntax Pattern                   | Tokenizer Used    |
+      | ------------------ | -------------------------------- | ----------------- |
+      | **Header**         | `#`, `##`, etc.                  | `HeaderTokenizer` |
+      | **Unordered List** | `- item` or `-- item`            | `ListTokenizer`   |
+      | **Ordered List**   | `1. item`, `2. item`, etc.       | `ListTokenizer`   |
+      | **Code Block**     | Between triple backticks ` ``` ` | `CodeTokenizer`   |
+      | **Plain Text**     | Any other line                   | `TextTokenizer`   |
 
-3. **Token Representation**:
+
+   **Will produce**:
+
+   - A header token with inline tokens
+
+   - A text token with multiple inline tokens
+
+   - A list item (unordered)
+
+   - A list item (ordered)
+
+    - A code block token with the Python function as content
+  
+   After block-level parsing, the value of each token is further scanned for inline formatting using InlineTokenizer
+
+3. **Inline Tokenization**:
+
+      The InlineTokenizer parses inline formatting in a given string and converts recognized styles into structured tokens. Supported formats include:
+Supported Syntax:
+
+      | Format Type | Syntax Example           | Token Type          |
+      | ----------- | ------------------------ | ------------------- |
+      | **Bold**    | `**bold**` or `__bold__` | `InlineType.BOLD`   |
+      | *Italic*    | `*italic*` or `_italic_` | `InlineType.ITALIC` |
+      | `Code`      | `` `inline code` ``      | `InlineType.CODE`   |
+      | `Code`      | ` ` spaced code ` `      | `InlineType.CODE`   |
+ 
+   **Example Input:** 
+      ```
+      This is **bold**, *italic*, and `code`.
+      ```
+
+      **Output Tokens:**
+      ```
+      [
+             InlineToken(InlineType.TEXT, "This is "),
+             InlineToken(InlineType.BOLD, "bold"),
+             InlineToken(InlineType.TEXT, ", "),
+             InlineToken(InlineType.ITALIC, "italic"),
+             InlineToken(InlineType.TEXT, ", and "),
+             InlineToken(InlineType.CODE, "code"),
+             InlineToken(InlineType.TEXT, ".")
+      ]
+      ```
+
+4. **Token Representation**:
    - Each token has a type and value
    - Complex lines may yield nested tokens (e.g., header + inline bold text)
 
