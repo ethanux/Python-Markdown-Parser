@@ -1,11 +1,10 @@
-# Markdown Tokenizer and Parser
+#  Lightweight Markdown Parser with GUI and Live Preview
 
 ## Overview
 
-This project is a lightweight Markdown tokenizer and parser built in Python. Its primary purpose is to take a raw Markdown (`.md`) file and convert it into structured tokens that represent different Markdown elements such as headers, lists, inline formatting (bold, italic, code), and plain text.
+This project is a lightweight Markdown tokenizer, parser, and renderer built in Python. It converts raw Markdown (.md) input into structured tokens, parses them into HTML, and displays a real-time preview of the rendered content.
 
-This modular design allows for easy extension and serves as an educational tool for understanding how parsing and lexical analysis work behind the scenes in compilers and interpreters.
-
+Initially designed as a command-line tool for educational purposes—to demonstrate lexical analysis and parsing similar to that used in compilers—it has since been expanded with a graphical user interface (GUI) using tkinter, and a live HTML preview window powered by pywebview.
 ---
 ## Image Preview
 ![Capture](https://github.com/user-attachments/assets/3462c49a-a3f7-4bb1-82f6-e6625964ecac)
@@ -13,27 +12,39 @@ This modular design allows for easy extension and serves as an educational tool 
 
 ## How It Works
 
-The system reads a Markdown file line by line and passes each line through a series of tokenizers. The process involves:
+**Markdown Input** – Users type or paste Markdown into the GUI.
 
-1. **Line-based Tokenization**:
+**Tokenization** – The MakeToken module scans the Markdown and generates tokens representing Markdown elements.
+
+**Parsing** – The DriverParser processes these tokens into corresponding HTML.
+
+**Rendering** – The HTML is styled using a custom theme (Theme) and rendered in a pywebview window.
+
+**Live Feedback** – Every time the user clicks "Convert & Render", the preview updates instantly. 
+
+---
+
+
+# How tokenization works
+### **Line-based Tokenization**:
    - Detects headers (lines starting with `#`)
    - Detects unordered list items (lines starting with `-`)
    - Detects ordered list items (lines starting with `1.` ) numbering is autometically handled
    - Detects code block (line starting with ` ``` `, and ending with ` ``` `)
    - Defaults to plain text if no special formatting is found
 
-   **Block-Level Token Types**
+   #### **Block-Level Token Types**
    
-      | Block Type         | Syntax Pattern                   | Tokenizer Used    |
-      | ------------------ | -------------------------------- | ----------------- |
-      | **Header**         | `#`, `##`, etc.                  | `HeaderTokenizer` |
-      | **Unordered List** | `- item` or `-- item`            | `ListTokenizer`   |
-      | **Ordered List**   | `1. item`, `2. item`, etc.       | `ListTokenizer`   |
-      | **Code Block**     | Between triple backticks ` ``` ` | `CodeTokenizer`   |
-      | **Plain Text**     | Any other line                   | `TextTokenizer`   |
+   | Block Type         | Syntax Pattern                   | Tokenizer Used    |
+   | ------------------ | -------------------------------- | ----------------- |
+   | **Header**         | `#`, `##`, etc.                  | `HeaderTokenizer` |
+   | **Unordered List** | `- item` or `-- item`            | `ListTokenizer`   |
+   | **Ordered List**   | `1. item`, `2. item`, etc.       | `ListTokenizer`   |
+   | **Code Block**     | Between triple backticks ` ``` ` | `CodeTokenizer`   |
+   | **Plain Text**     | Any other line                   | `TextTokenizer`   |
 
 
-   **Will produce**:
+   #### **Will produce**:
 
    - A header token with inline tokens
 
@@ -43,30 +54,32 @@ The system reads a Markdown file line by line and passes each line through a ser
 
    - A list item (ordered)
 
-    - A code block token with the Python function as content
+   - A code block token with the Python function as content
   
    After block-level parsing, the value of each token is further scanned for inline formatting using InlineTokenizer
 
-3. **Inline Tokenization**:
+ ### **Inline Tokenization**:
 
-      The InlineTokenizer parses inline formatting in a given string and converts recognized styles into structured tokens. Supported formats include:
+The InlineTokenizer parses inline formatting in a given string and converts recognized styles into structured tokens. Supported formats include:
 Supported Syntax:
 
-      | Format Type | Syntax Example           | Token Type          |
-      | ----------- | ------------------------ | ------------------- |
-      | **Bold**    | `**bold**` or `__bold__` | `InlineType.BOLD`   |
-      | *Italic*    | `*italic*` or `_italic_` | `InlineType.ITALIC` |
-      | `Code`      | `` `inline code` ``      | `InlineType.CODE`   |
-      | `Code`      | ` ` spaced code ` `      | `InlineType.CODE`   |
- 
-   **Example Input:** 
-      ```
-      This is **bold**, *italic*, and `code`.
-      ```
+   | Format Type | Syntax Example           | Token Type          |
+   | ----------- | ------------------------ | ------------------- |
+   | **Bold**    | `**bold**` or `__bold__` | `InlineType.BOLD`   |
+   | *Italic*    | `*italic*` or `_italic_` | `InlineType.ITALIC` |
+   | `Code`      | `` `inline code` ``      | `InlineType.CODE`   |
+   | `Code`      | ` ` spaced code ` `      | `InlineType.CODE`   |
+   
+   
+   
+#### **Example Input:** 
+ ```
+ This is **bold**, *italic*, and `code`.
+ ```
 
-      **Output Tokens:**
-      ```
-      [
+**Output Tokens:**
+```
+   [
              InlineToken(InlineType.TEXT, "This is "),
              InlineToken(InlineType.BOLD, "bold"),
              InlineToken(InlineType.TEXT, ", "),
@@ -75,9 +88,9 @@ Supported Syntax:
              InlineToken(InlineType.CODE, "code"),
              InlineToken(InlineType.TEXT, ".")
       ]
-      ```
+```
 
-4. **Token Representation**:
+### **Token Representation**:
    - Each token has a type and value
    - Complex lines may yield nested tokens (e.g., header + inline bold text)
 
@@ -99,8 +112,34 @@ The following rules govern how Markdown elements are tokenized:
 - Default → Plain text token
 
 ---
+# inline markdown parser rules 
 
-## Topics Covered & Lessons Learned
+| Markdown     | Token Type | InlineType |
+| ------------ | ---------- | ---------- |
+| `*italic*`   | Inline     | `ITALIC`   |
+| `_italic_`   | Inline     | `ITALIC`   |
+| `**bold**`   | Inline     | `BOLD`     |
+| `__bold__`   | Inline     | `BOLD`     |
+| `` `code` `` | Inline     | `CODE`     |
+| Regular text | Inline     | `TEXT`     |
+
+
+## For each line:
+- Check if it’s a header (`#`)
+- Check if it's an unordered list (`-`)
+- Check if it's an ordered list (`1.`, `2.`, etc.)
+- Check if it's a code block  (` ``` `)
+- Else: treat as normal text
+
+## For all:
+- Tokenize block-level
+- Then tokenize inline
+- Append either: 
+    (block_token, [inline_tokens]) or block_token (if no inline)
+- convert to html contents using token types
+
+---
+# Topics Covered & Lessons Learned
 
 This project covers a variety of topics in both **programming** and **system design**:
 
@@ -121,71 +160,62 @@ This makes the project a strong starting point for those interested in building 
 
 ---
 
-## How to Run
+# How to Run
 
 ### Prerequisites
 
-- Python 3.8 or higher
+Make sure you have Python 3 installed. You’ll also need the following Python packages:
+```
+pip install pywebview
+```
+| **_Note: tkinter comes pre-installed with most Python distributions. If not, you may need to install it manually depending on your OS_**.
 
-### Steps
 
-1. Clone or download the repository.
-2. Place your Markdown file as `README.md` inside the `markdown/` directory.
-3. Run the tokenizer:
+### Running the App
+1. Clone the Repository on your computer:
+   ```
+   git clone https://github.com/ethanux/Python-Markdown-Parser.git
+   cd Python-Markdown-Parser
+   ```
+   | **_Note:if not using command line please change directories to the main/root directory of the project_**
 
-```bash
-python markdown/main.py
+2. Run the Main File:
+   
+   on your teminlal run the following command and make sure u have python3 or heigher installed
+   ```
+   python main.py
+   ```
+   | **_Note : if you dont know ho to use the terminal just run the `main.py` file but double clicking on it_**
+   
+3. This will:
+
+- Launch the GUI for Markdown input
+
+- Open a new window for HTML preview
+---
+
+### Test It Out
+
+Try entering this example into the input box:
+
+```
+# Hello World
+
+This is a paragraph with **bold**, *italic*, and `inline code`.
+
+## List
+
+- Item 1
+- Item 2
+
+1. First
+2. Second
+
 ```
 
-This will output the list of tokens detected in the Markdown file, showing how each line is parsed and categorized.
-
----
-
-## Example Output
-
-Given a `README.md` like:
-
-```markdown
-# Welcome
-This is **bold** and *italic*.
-- List item 1
-```
-
-The output will be html content saved in an html file stored in this path markdown/html/markdown.html
-
----
+**Then click “Convert & Render” to see the output in real time!**
 
 
-
-## inline markdown parser rules 
-
-| Markdown     | Token Type | InlineType |
-| ------------ | ---------- | ---------- |
-| `*italic*`   | Inline     | `ITALIC`   |
-| `_italic_`   | Inline     | `ITALIC`   |
-| `**bold**`   | Inline     | `BOLD`     |
-| `__bold__`   | Inline     | `BOLD`     |
-| `` `code` `` | Inline     | `CODE`     |
-| Regular text | Inline     | `TEXT`     |
-
-
-📦 Full Working Flow Recap
-
-# For each line:
-- Check if it’s a header (`#`)
-- Check if it's an unordered list (`-`)
-- Check if it's an ordered list (`1.`, `2.`, etc.)
-- Check if it's a code block  (` ``` `)
-- Else: treat as normal text
-
-# For all:
-- Tokenize block-level
-- Then tokenize inline
-- Append either: 
-    (block_token, [inline_tokens]) or block_token (if no inline)
-
-
----
 
 ## License
 
